@@ -10,18 +10,22 @@ const connection = mysql.createConnection({
 const connectmysql = {
     async fnExecuteQuery(Query){
         return await new Promise((resolve, reject)=>{
-            connection.connect();        
-            connection.query("SELECT 2 AS username", function (error, results, fields) {
-                if (error) {
-                    console.log(error)
-                } else {
-                    console.log(typeof results[0])
-                    console.log(results[0])
-                    console.log('The username is: ', results[0].username);
-                    resolve(results[0].username)
-                }
-            });
-            connection.end();
+            try {
+                connection.connect(function (err) {
+                    if (err) {
+                        throw err
+                    }
+                });        
+                connection.query( Query, function (error, results, fields) {
+                    if (error) {
+                        throw error
+                    } else {
+                        resolve(results)
+                    }
+                });
+            } catch (err) {
+                throw err
+            }
         })
     }
 }
