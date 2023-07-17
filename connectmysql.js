@@ -9,24 +9,35 @@ const connection = mysql.createConnection({
 
 const connectmysql = {
     async fnExecuteQuery(Query){
-        return await new Promise((resolve, reject)=>{
-            try {
-                connection.connect(function (err) {
-                    if (err) {
-                        throw err
-                    }
-                });        
-                connection.query( Query, function (error, results, fields) {
+        try {   
+            connection.connect(function (err) {
+                if (err) { 
+                    throw err
+                }
+            });
+            const response = await this.fnQuery(Query)
+            connection.end();
+            
+            return response
+        } catch (err) {
+            console.log(err)
+            connection.end();
+        }
+    },
+    async fnQuery(Query){
+        try {
+            return await new Promise((resolve, reject)=>{ 
+                connection.query(Query, function (error, results) {
                     if (error) {
-                        throw error
+                        reject(error)
                     } else {
                         resolve(results)
                     }
                 });
-            } catch (err) {
-                throw err
-            }
-        })
+            })
+        } catch (error) {
+            throw error
+        }
     }
 }
 

@@ -22,7 +22,7 @@ const fnVerifyJsonWebToken = (req, res, next) => {
 
 router.post('/fnLogin', async (req, res) => {
     try {
-        const json = await controller.fnGenerateJWT(req, res)
+        const json = await controller.fnLogin(req, res)
         res.status(200).json(json)
     } catch (error) {
         res.status(500).send(error)
@@ -38,12 +38,9 @@ router.post('/fnVerifyJWT', async (req, res) => {
     }
 })
 
-router.post('/fnGetData', fnVerifyJsonWebToken, async (req, res) => {
+router.post('/fnRegister', async (req, res) => {
     try {
-        const { username } = req.body
-        const json = {
-            username
-        }
+        const json = await controller.fnRegister(req, res)
         res.status(200).json(json)
     } catch (error) {
         res.status(500).send(error)
