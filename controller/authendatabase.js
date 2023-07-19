@@ -3,21 +3,22 @@ const bcrypt = require('bcrypt')
 
 const database = {
     fnFindUserByEmail: async function (email) {
+        email = email ? ` '${email}' ` : null
+
         const query = ` select user_id, email, salt
                         from users
-                        where email = '${email}'
+                        where email = ${email}
                     `
         const result = await connectmysql.fnExecuteQuery(query)
-        console.log(result)
-
         return result
     },
     fnCheckEmailAndHashPassword: async function (email, password, salt) {
+        
         const hashPassword = await bcrypt.hash(password, salt)
         const query = ` select user_id, email, username
                         from users
                         where email = '${email}'
-                        and password = ${hashPassword}
+                        and hashpassword = '${hashPassword}'
                     `
         const result = await connectmysql.fnExecuteQuery(query)
         return result
@@ -26,8 +27,8 @@ const database = {
         const randomsalt = bcrypt.genSaltSync(10)
         const hashpassword = await bcrypt.hash(password, randomsalt)
 
-        const query = ` insert users (email, username, hashpassword, salt)
-                        values ('${email}', '${username}', '${hashpassword}', '${randomsalt}')
+        const query = ` insert users (email, username, hashpassword, salt, register_date)
+                        values ('${email}', '${username}', '${hashpassword}', '${randomsalt}', now())
                     `
         const result = await connectmysql.fnExecuteQuery(query)
         let isSuccess = false

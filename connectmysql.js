@@ -1,6 +1,7 @@
 var mysql = require('mysql')
 
-const connection = mysql.createConnection({
+const pool = mysql.createPool({
+    connectionLimit : 10,
     host     : '127.0.0.1',
     user     : process.env.DB_USER,
     password : process.env.DB_PASSWORD,
@@ -9,35 +10,30 @@ const connection = mysql.createConnection({
 
 const connectmysql = {
     async fnExecuteQuery(Query){
+        let response
         try {   
-            connection.connect(function (err) {
+            response = await this.fnQuery(Query)
+        } catch (err) {
+            throw err
+        }
+        return response
+    },
+    async fnQuery(Query){
+        return await new Promise((resolve, reject)=>{ 
+            pool.getConnection(function (err, connection) {
                 if (err) { 
                     throw err
                 }
-            });
-            const response = await this.fnQuery(Query)
-            connection.end();
-            
-            return response
-        } catch (err) {
-            console.log(err)
-            connection.end();
-        }
-    },
-    async fnQuery(Query){
-        try {
-            return await new Promise((resolve, reject)=>{ 
                 connection.query(Query, function (error, results) {
+                    connection.release();
                     if (error) {
                         reject(error)
                     } else {
                         resolve(results)
                     }
                 });
-            })
-        } catch (error) {
-            throw error
-        }
+            });
+        })
     }
 }
 

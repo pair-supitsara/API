@@ -7,6 +7,10 @@ const business = {
   fnLogin: async function (req, res) {
     try {
       const { email, password } = req.body
+      // check is not null
+      if ( !email || !password ) {
+        return 'email password cannot be null '
+      }
       
       // find salt if salt is undefined becase of wrong email or you have to register before logging in
       const user = await authendatabase.fnFindUserByEmail(email)
@@ -16,7 +20,6 @@ const business = {
       } else {
         return 'please, wrong email or signup before logging in'
       }
-
       // check email and password are correct
       const resultUser = await authendatabase.fnCheckEmailAndHashPassword(email, password, salt)
       let username
@@ -28,7 +31,7 @@ const business = {
 
       // create token
       const payload = { username }
-      const option = { expiresIn: '60s' }
+      const option = { expiresIn: '600s' }
       var token = jwt.sign(payload, process.env.PRIVATE_KEY, option);
       if (!token) {
         return 'fail while creating json web token'

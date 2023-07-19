@@ -13,13 +13,14 @@ const transporter = nodemailer.createTransport({
 
 const emailsender = {
     async fnSendEmail(req, res) {
+        const { receiver, subject, mailmessage, html } = req.body
         try {
             const message = {
-                from: '"Fred Foo 👻" <foo@example.com>', // sender address
-                to: 'pair.supit001@gmail.com', // list of receivers
-                subject: "Hello ✔", // Subject line
-                text: "Hello world?", // plain text body
-                html: "<b>Hello world?</b>", // html body
+                from: '"API 👻"',
+                to: receiver ,
+                subject: subject, // 
+                text: mailmessage, 
+                html: html || "",
             }
             const info = await transporter.sendMail(message);  
             res.send('Send mail success please check your email')
