@@ -1,4 +1,4 @@
-const connectmysql = require('../connectmysql.js')
+const connectmysql = require('../../connectmysql.js')
 const bcrypt = require('bcrypt')
 
 const database = {

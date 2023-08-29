@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const controller = require('../controller/authen.js')
+const controller = require('../controller/authentication/authenbusiness.js')
 const jwt = require('jsonwebtoken')
 
 const fnVerifyJsonWebToken = (req, res, next) => {

@@ -7,7 +7,12 @@ const app = express()
 const port = 3000
 const route = require('./route.js')
 
-app.use(cors())
+const corsOptions = {
+  origin: 'http://localhost:5500',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors(corsOptions))
 app.use(express.json());
 app.use(morgan('tiny'))
 app.use('/api', route)
