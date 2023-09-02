@@ -62,20 +62,20 @@ const business = {
   },
   fnRegister: async function (req, res) {
     try {
-      const { email, username, password } = req.body
-      const user = await authendatabase.fnFindUserByEmail(email)
-      if (user.length > 0) {
-        return 'You already have an account with this email'
+      const { email, password } = req.body
+      const result = { message: "", data: [] }
+
+      const isExistUser = await authendatabase.fnFindUserByEmail(email)
+      if (isExistUser.length > 0) {
+        result.message = `You already have registered with this email: ${email}`
+        return result
       }
 
-      const isSuccess = await authendatabase.fnAddUserAccount(email, username, password)
-      if (isSuccess) {
-        return 'register success'
-      } else {
-        return 'register fail'
-      }
-       
+      const resultInsertUsers = await authendatabase.fnAddUserAccount(email, password)
+      result.message = resultInsertUsers.message
+      return result
     } catch (err) {
+      console.log(err)
       throw err
     }
   }

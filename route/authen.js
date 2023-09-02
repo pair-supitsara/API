@@ -25,7 +25,7 @@ router.post('/fnLogin', async (req, res) => {
         const json = await controller.fnLogin(req, res)
         res.status(200).json(json)
     } catch (error) {
-        res.status(500).send(error)
+        res.status(500).json(error)
     }
 })
 
@@ -34,16 +34,24 @@ router.post('/fnVerifyJWT', async (req, res) => {
         const json = await controller.fnVerifyJWT(req, res)
         res.status(200).json(json)
     } catch (error) {
-        res.status(500).send(error)
+        res.status(500).json(error)
     }
 })
 
 router.post('/fnRegister', async (req, res) => {
     try {
         const json = await controller.fnRegister(req, res)
-        res.status(200).json(json)
+        res.status(200).json({
+            status: 'success',
+            message: json.message,
+            data: json.data
+        })
     } catch (error) {
-        res.status(500).send(error)
+        res.status(500).json({
+            status: 'fail',
+            message: error.message,
+            data: []
+        })
     }
 })
 

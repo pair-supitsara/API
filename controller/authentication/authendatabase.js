@@ -23,17 +23,17 @@ const database = {
         const result = await connectmysql.fnExecuteQuery(query)
         return result
     },
-    fnAddUserAccount: async function (email, username, password) {
+    fnAddUserAccount: async function (email, password) {
         const randomsalt = bcrypt.genSaltSync(10)
         const hashpassword = await bcrypt.hash(password, randomsalt)
+        const result = { message: 'register fail'}
 
-        const query = ` insert users (email, username, hashpassword, salt, register_date)
-                        values ('${email}', '${username}', '${hashpassword}', '${randomsalt}', now())
+        const query = ` insert users (email, hashpassword, salt, register_date)
+                        values ('${email}', '${hashpassword}', '${randomsalt}', now())
                     `
-        const result = await connectmysql.fnExecuteQuery(query)
-        let isSuccess = false
+        result.data = await connectmysql.fnExecuteQuery(query)
         if (result.affectedRows >= 1) {
-            isSuccess = true
+            result.message = 'register success'
         }
         return result
     }
