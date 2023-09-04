@@ -23,9 +23,17 @@ const fnVerifyJsonWebToken = (req, res, next) => {
 router.post('/fnLogin', async (req, res) => {
     try {
         const json = await controller.fnLogin(req, res)
-        res.status(200).json(json)
+        res.status(200).json({
+            status: json.status,
+            message: json.message,
+            data: json.data
+        })
     } catch (error) {
-        res.status(500).json(error)
+        res.status(500).json({
+            status: 'fail',
+            message: error.message,
+            data: []
+        })
     }
 })
 
@@ -42,7 +50,7 @@ router.post('/fnRegister', async (req, res) => {
     try {
         const json = await controller.fnRegister(req, res)
         res.status(200).json({
-            status: 'success',
+            status: json.status,
             message: json.message,
             data: json.data
         })

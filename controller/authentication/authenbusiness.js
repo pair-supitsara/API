@@ -7,9 +7,13 @@ const business = {
   fnLogin: async function (req, res) {
     try {
       const { email, password } = req.body
+      const result = { status: "", message: "", data: [] }
+
       // check is not null
       if ( !email || !password ) {
-        return 'email password cannot be null '
+        result.status = 'fail'
+        result.message = 'email password cannot be null'
+        return result
       }
       
       // find salt if salt is undefined becase of wrong email or you have to register before logging in
@@ -18,28 +22,37 @@ const business = {
       if (user.length > 0) {
         salt = user[0].salt
       } else {
-        return 'please, wrong email or signup before logging in'
+        result.status = 'fail'
+        result.message = 'please, enter correct email or signup before logging in'
+        return result
       }
+
       // check email and password are correct
       const resultUser = await authendatabase.fnCheckEmailAndHashPassword(email, password, salt)
-      let username
+      let username, userid
       if (resultUser.length > 0) {
         username = resultUser[0].username
+        userid = resultUser[0].user_id
       } else {
-        return 'wrong password'
+        result.status = 'fail'
+        result.message = 'wrong password'
+        return result
       }
 
       // create token
-      const payload = { username }
+      const payload = { username, userid }
       const option = { expiresIn: '600s' }
       var token = jwt.sign(payload, process.env.PRIVATE_KEY, option);
       if (!token) {
-        return 'fail while creating json web token'
+        result.status = 'fail'
+        result.message = 'fail while creating json web token'
+        return result
+      } else {
+        result.status = 'success'
+        result.data = token
       }
 
-      return {
-        token
-      }
+      return result
     } catch (err) {
       throw err
     }
@@ -63,19 +76,20 @@ const business = {
   fnRegister: async function (req, res) {
     try {
       const { email, password } = req.body
-      const result = { message: "", data: [] }
+      const result = { status: "", message: "", data: [] }
 
       const isExistUser = await authendatabase.fnFindUserByEmail(email)
       if (isExistUser.length > 0) {
+        result.status = 'fail'
         result.message = `You already have registered with this email: ${email}`
         return result
       }
 
       const resultInsertUsers = await authendatabase.fnAddUserAccount(email, password)
+      result.status = resultInsertUsers.status
       result.message = resultInsertUsers.message
       return result
     } catch (err) {
-      console.log(err)
       throw err
     }
   }

@@ -3,13 +3,19 @@ const bcrypt = require('bcrypt')
 
 const database = {
     fnFindUserByEmail: async function (email) {
+        const result = { status: 'fail', message: 'insert users fail' , data: [] }
         email = email ? ` '${email}' ` : null
 
         const query = ` select user_id, email, salt
                         from users
                         where email = ${email}
-                    `
-        const result = await connectmysql.fnExecuteQuery(query)
+                      `
+        const resultGetUser = await connectmysql.fnExecuteQuery(query)
+        if (resultGetUser.length > 0) {
+            result.status = 'success'
+            result.message = `found user register with this email ${email}`
+            result.data = resultGetUser
+        }
         return result
     },
     fnCheckEmailAndHashPassword: async function (email, password, salt) {
@@ -26,13 +32,14 @@ const database = {
     fnAddUserAccount: async function (email, password) {
         const randomsalt = bcrypt.genSaltSync(10)
         const hashpassword = await bcrypt.hash(password, randomsalt)
-        const result = { message: 'register fail'}
+        const result = { status: 'fail', message: 'insert users fail' , data: [] }
 
-        const query = ` insert users (email, hashpassword, salt, register_date)
-                        values ('${email}', '${hashpassword}', '${randomsalt}', now())
+        const query = ` insert users (email, hashpassword, salt, createdate, updatedate)
+                        values ('${email}', '${hashpassword}', '${randomsalt}', now(), now())
                     `
-        result.data = await connectmysql.fnExecuteQuery(query)
-        if (result.affectedRows >= 1) {
+        const resultInsertUsers = await connectmysql.fnExecuteQuery(query)
+        if (resultInsertUsers.affectedRows >= 1) {
+            result.status = 'success'
             result.message = 'register success'
         }
         return result
