@@ -1,4 +1,4 @@
-var mysql = require('mysql')
+import mysql from 'mysql'
 
 const pool = mysql.createPool({
     connectionLimit : 10,
@@ -37,4 +37,4 @@ const connectmysql = {
     }
 }
 
-module.exports = connectmysql
+export default connectmysql

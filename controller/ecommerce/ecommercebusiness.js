@@ -1,4 +1,4 @@
-const database = require('./ecommercedatabase.js')
+import database from './ecommercedatabase.js'
 
 const business = {
   fnSearchProduct: async function (req, res) {
@@ -18,4 +18,4 @@ const business = {
   }
 }
 
-module.exports = business
+export default business

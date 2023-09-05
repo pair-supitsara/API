@@ -1,7 +1,7 @@
-const express = require('express')
-const router = express.Router()
-const controller = require('../controller/demo.js')
+import { Router } from 'express'
+const router = Router()
+import business from '../controller/demo.js'
 
-router.post('/fnDemo', async (req, res) => { await controller.fnDemo(req, res) })
+router.post('/fnDemo', async (req, res) => { await business.fnDemo(req, res) })
 
-module.exports = router
+export default router

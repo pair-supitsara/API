@@ -1,7 +1,7 @@
 
-const authendatabase = require('./authendatabase.js')
-const bcrypt = require('bcrypt')
-var jwt = require('jsonwebtoken');
+import authendatabase from './authendatabase.js'
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 const business = {
   fnLogin: async function (req, res) {
@@ -78,7 +78,7 @@ const business = {
       const { email, password } = req.body
       const result = { status: "", message: "", data: [] }
 
-      const isExistUser = await authendatabase.fnFindUserByEmail(email)
+      /*const isExistUser = await authendatabase.fnFindUserByEmail(email)
       if (isExistUser.length > 0) {
         result.status = 'fail'
         result.message = `You already have registered with this email: ${email}`
@@ -87,7 +87,7 @@ const business = {
 
       const resultInsertUsers = await authendatabase.fnAddUserAccount(email, password)
       result.status = resultInsertUsers.status
-      result.message = resultInsertUsers.message
+      result.message = resultInsertUsers.message*/
       return result
     } catch (err) {
       throw err
@@ -95,4 +95,4 @@ const business = {
   }
 }
 
-module.exports = business
+export default business

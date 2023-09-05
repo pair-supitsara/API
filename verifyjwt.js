@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
 
 const fnVerifyJsonWebToken = (req, res, next) => {
     try {
@@ -17,4 +17,4 @@ const fnVerifyJsonWebToken = (req, res, next) => {
     }
 }
 
-module.exports = { fnVerifyJsonWebToken }
+export default fnVerifyJsonWebToken

@@ -1,6 +1,6 @@
-const connectmysql = require('../connectmysql.js')
-const bcrypt = require('bcrypt')
-var jwt = require('jsonwebtoken');
+import connectmysql from '../connectmysql.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const business = {
   fnRegister: async function (req, res) {
@@ -13,4 +13,4 @@ const business = {
   }
 }
 
-module.exports = business
+export default business

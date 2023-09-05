@@ -1,5 +1,5 @@
-const connectmysql = require('../../connectmysql.js')
-const bcrypt = require('bcrypt')
+import connection from '../../connectmysql.js'
+import bcrypt from 'bcrypt'
 
 const database = {
     fnFindUserByEmail: async function (email) {
@@ -10,7 +10,7 @@ const database = {
                         from users
                         where email = ${email}
                       `
-        const resultGetUser = await connectmysql.fnExecuteQuery(query)
+        const resultGetUser = await connection.fnExecuteQuery(query)
         if (resultGetUser.length > 0) {
             result.status = 'success'
             result.message = `found user register with this email ${email}`
@@ -26,7 +26,7 @@ const database = {
                         where email = '${email}'
                         and hashpassword = '${hashPassword}'
                     `
-        const result = await connectmysql.fnExecuteQuery(query)
+        const result = await connection.fnExecuteQuery(query)
         return result
     },
     fnAddUserAccount: async function (email, password) {
@@ -37,7 +37,7 @@ const database = {
         const query = ` insert users (email, hashpassword, salt, createdate, updatedate)
                         values ('${email}', '${hashpassword}', '${randomsalt}', now(), now())
                     `
-        const resultInsertUsers = await connectmysql.fnExecuteQuery(query)
+        const resultInsertUsers = await connection.fnExecuteQuery(query)
         if (resultInsertUsers.affectedRows >= 1) {
             result.status = 'success'
             result.message = 'register success'
@@ -46,4 +46,4 @@ const database = {
     }
 }
 
-module.exports = database
+export default database

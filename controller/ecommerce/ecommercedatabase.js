@@ -1,4 +1,4 @@
-const connectmysql = require('../../connectmysql.js')
+import connection from '../../connectmysql.js'
 
 const database = {
     fnFindUserByEmail: async function (email) {
@@ -8,9 +8,9 @@ const database = {
                         from users
                         where email = ${email}
                     `
-        const result = await connectmysql.fnExecuteQuery(query)
+        const result = await connection.fnExecuteQuery(query)
         return result
     }
 }
 
-module.exports = database
+export default database

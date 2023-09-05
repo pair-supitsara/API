@@ -1,14 +1,14 @@
-const express = require('express')
-const router = express.Router()
-const controller = require('../controller/login.js')
+import { Router } from 'express'
+const router = Router()
+import business from '../controller/login.js'
 
 router.post('/fnRegister', async (req, res) => {
     try {
-        const json = await controller.fnRegister(req, res)
+        const json = await fnRegister(req, res)
         res.status(200).json(json)
     } catch (error) {
         res.status(500).send(error)
     }
 })
 
-module.exports = router
+export default router
