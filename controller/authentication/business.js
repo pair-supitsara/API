@@ -17,8 +17,8 @@ const business = {
       // find salt if salt is undefined becase of wrong email or you have to register before logging in
       const rsuser = await database.fnFindUserByEmail(email)
       let salt
-      if (rsuser.data.length > 0 ) {
-        salt = rsuser.data[0].salt
+      if (rsuser.length > 0 ) {
+        salt = rsuser[0].salt
       } else {
         result.status = 'fail'
         result.message = 'enter correct email or register before logging in'

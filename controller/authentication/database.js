@@ -11,12 +11,7 @@ const database = {
                             where email = ${valid.prepare(email)}
                         `
             const resultGetUser = await connection.fnExecuteQuery(query)
-            if (resultGetUser.length > 0) {
-                result.status = 'success'
-                result.message = `found user register with this email ${email}`
-                result.data = resultGetUser
-            }
-            return result
+            return resultGetUser
         } catch(err) {
             throw new Error(err)
         }
