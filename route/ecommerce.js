@@ -1,6 +1,6 @@
 import { Router } from 'express'
 const router = Router()
-import business from '../controller/ecommerce/ecommercebusiness.js'
+import business from '../controller/ecommerce/business.js'
 
 router.post('/fnSearchProduct', async (req, res) => {
     try {

@@ -1,4 +1,4 @@
-import connection from '../../connectmysql.js'
+import connection from '../../helper/connectmysql.js'
 
 const database = {
     fnFindUserByEmail: async function (email) {

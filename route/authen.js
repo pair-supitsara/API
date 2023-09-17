@@ -1,6 +1,6 @@
 import { Router } from 'express'
 const router = Router()
-import business from '../controller/authentication/authenbusiness.js'
+import business from '../controller/authentication/business.js'
 import jwt from 'jsonwebtoken'
 
 const fnVerifyJsonWebToken = (req, res, next) => {

@@ -1,7 +1,7 @@
 import { Router } from 'express'
 const router = Router()
 import business from '../controller/emailsender.js'
-import jwt from '../verifyjwt.js'
+import jwt from '../helper/verifyjwt.js'
 
 router.post('/fnSendEmail', async (req, res) => {
     try {

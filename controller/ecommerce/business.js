@@ -1,4 +1,4 @@
-import database from './ecommercedatabase.js'
+import database from './database.js'
 
 const business = {
   fnSearchProduct: async function (req, res) {
