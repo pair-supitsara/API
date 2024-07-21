@@ -1,65 +1,36 @@
 import { Router } from 'express'
 const router = Router()
 import business from '../controller/authentication/business.js'
-import jwt from 'jsonwebtoken'
+import auth from '../middleware/auth.js'
 
-const fnVerifyJsonWebToken = (req, res, next) => {
-    try {
-        const { authorization } = req.headers
-        const token = authorization.split(' ')[1]
-        jwt.verify(token, process.env.PRIVATE_KEY, function(error, response) {
-            if(error){ 
-                throw error 
-            } else {
-                req.body.username = response.username
-                next()
-            }
-        })
-    } catch (error) {
-        throw error
-    }
-}
-
-router.post('/fnLogin', async (req, res) => {
+router.post('/login', async (req, res) => {
     try {
         const json = await business.fnLogin(req, res)
-        res.status(200).json({
-            status: json.status,
-            message: json.message,
-            data: json.data
-        })
+
+        res.status(200).json({ json })
     } catch (error) {
-        res.status(500).json({
-            status: 'fail',
-            message: error.message,
-            data: []
-        })
+        res.status(500).json({ message: error.message })
     }
 })
 
-router.post('/fnVerifyJWT', async (req, res) => {
+router.post('/testverifytoken', auth, async (req, res) => { /* ทดสอบ use middleware */
     try {
-        const json = await business.fnVerifyJWT(req, res)
+        const json = {
+            message: 'test token result'
+        }
         res.status(200).json(json)
     } catch (error) {
-        res.status(500).json(error)
+        res.status(500).json({ error: error.message })
     }
 })
 
-router.post('/fnRegister', async (req, res) => {
+router.post('/register', async (req, res) => {
     try {
         const json = await business.fnRegister(req, res)
-        res.status(200).json({
-            status: json.status,
-            message: json.message,
-            data: json.data
-        })
+
+        res.status(200).json({ json })
     } catch (error) {
-        res.status(500).json({
-            status: 'fail',
-            message: error.message,
-            data: []
-        })
+        res.status(500).json({ message: error.message })
     }
 })
 

@@ -1,22 +1,17 @@
-import morgan, { token } from 'morgan'
-import express, { json } from 'express'
+import morgan from 'morgan'
+import express from 'express'
 import cors from 'cors'
 import 'dotenv/config'
-
-const app = express()
-const port = 3000
 import route from './route.js'
+const app = express()
+const port = 8080
 
-const corsOptions = {
-  origin: '*',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
-token('date', (req, res) => {
-  return new Date()
-})
-app.use(cors(corsOptions))
-app.use(json());
+app.use(cors({ origin: '*', optionsSuccessStatus: 200 }))
+app.use(express.json());
+
+morgan.token('date', (req, res) => new Date())
 app.use(morgan(':remote-addr - :remote-user - :date - :method - :url - :status - :res[content-length] - :response-time ms'))
+
 app.use('/api', route)
 
 app.listen(port, () => {

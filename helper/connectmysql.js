@@ -1,38 +1,23 @@
 import mysql from 'mysql'
 
-const pool = mysql.createPool({
-    connectionLimit : 10,
-    host     : '127.0.0.1',
-    user     : process.env.DB_USER,
-    password : process.env.DB_PASSWORD,
-    database : process.env.DATABASE,
-});
-
 const connectmysql = {
-    async fnExecuteQuery(Query){
-        let response
-        try {   
-            response = await this.fnQuery(Query)
-        } catch (err) {
-            throw err
-        }
-        return response
-    },
     async fnQuery(Query){
+        const connection = mysql.createConnection({
+            host     : '127.0.0.1',
+            user     : process.env.DB_USER,
+            password : process.env.DB_PASSWORD,
+            database : process.env.DATABASE,
+        });
+        
         return await new Promise((resolve, reject)=>{ 
-            pool.getConnection(function (err, connection) {
-                if (err) { 
-                    throw err
+            connection.connect();
+            connection.query(Query, function (error, results, fields) {
+                if (error) {
+                    reject(error)
                 }
-                connection.query(Query, function (error, results) {
-                    connection.release();
-                    if (error) {
-                        reject(error)
-                    } else {
-                        resolve(results)
-                    }
-                });
+                resolve(results)
             });
+            connection.end()
         })
     }
 }

@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon app.js",
-    "test": "start"
+    "debug": "node --inspect app.js"
   },
   "author": "supitsara.d",
   "license": "ISC",
@@ -19,6 +19,7 @@
     "moment-timezone": "^0.5.43",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
+    "mysql2": "^3.10.3",
     "nodemailer": "^6.9.3",
     "nodemon": "^3.0.1"
   },

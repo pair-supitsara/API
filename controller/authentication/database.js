@@ -1,16 +1,16 @@
-import connection from '../../helper/connectmysql.js'
-import valid from '../../helper/validator.js'
+import connectmysql from '../../helper/connectmysql.js'
 import bcrypt from 'bcrypt'
+import validator from '../../helper/validator.js'
+const { prepare } = validator
 
 const database = {
     fnFindUserByEmail: async function (email) {
         try {
-            const result = { status: 'fail', message: 'insert users fail' , data: [] }
             const query = ` select user_id, email, salt
                             from users
-                            where email = ${valid.prepare(email)}
+                            where email = ${prepare(email)}
                         `
-            const resultGetUser = await connection.fnExecuteQuery(query)
+            const resultGetUser = await connectmysql.fnQuery(query)
             return resultGetUser
         } catch(err) {
             throw new Error(err)
@@ -19,12 +19,14 @@ const database = {
     fnCheckEmailAndHashPassword: async function (email, password, salt) {
         try {
             const hashPassword = await bcrypt.hash(password, salt)
-            const query = ` select user_id, email, username
+            console.log(hashPassword)
+
+            const query = ` select user_id, email
                             from users
                             where email = '${email}'
                             and hashpassword = '${hashPassword}'
                         `
-            const result = await connection.fnExecuteQuery(query)
+            const result = await connectmysql.fnQuery(query)
             return result
         } catch(err) {
             throw new Error(err)
@@ -34,18 +36,16 @@ const database = {
         try {    
             const randomsalt = bcrypt.genSaltSync(10)
             const hashpassword = await bcrypt.hash(password, randomsalt)
-            const result = { status: 'fail', message: 'insert users fail' , data: [] }
 
-            const query = ` insert users (email, hashpassword, salt, createdate, updatedate)
-                            values ('${email}', '${hashpassword}', '${randomsalt}', now(), now())
+            const query = ` insert users (email, hashpassword, salt, createdate)
+                            values ('${email}', '${hashpassword}', '${randomsalt}', now())
                         `
-            const resultInsertUsers = await connection.fnExecuteQuery(query)
-            if (resultInsertUsers.affectedRows >= 1) {
-                result.status = 'success'
-                result.message = 'register success'
-            }
-            return result
+
+            const resultInsertUsers = await connectmysql.fnQuery(query)
+
+            return 'register success'
         } catch(err) {
+            console.log(err)
             throw new Error(err)
         }
     }
