@@ -35,7 +35,7 @@ const business = {
 
       // create token
       const payload = { userid }
-      const option = { expiresIn: '600s' }
+      const option = { expiresIn: '1000ms' }
       var token = jwt.sign(payload, process.env.PRIVATE_KEY, option);
       if (!token) {
         result.message = 'fail while creating json web token'
