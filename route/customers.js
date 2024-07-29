@@ -5,9 +5,19 @@ import auth from '../middleware/auth.js'
 
 router.post('/products', async (req, res) => {
     try {
-        const json = await business.fnGetProducts(req, res)
+        const result = await business.fnGetProducts(req, res)
 
-        res.status(200).json({ json })
+        res.status(200).json({ result })
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+})
+
+router.post('/getproductbyid', async (req, res) => {
+    try {
+        const result = await business.fnGetProductById(req, res)
+
+        res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ message: error.message })
     }

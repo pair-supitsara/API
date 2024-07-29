@@ -17,7 +17,18 @@ const business = {
       fs.writeFileSync(filePath, buffer)
       await database.fnInsertNewProduct(name, detail, `/uploads/${filename}`)
       
-      const result = { message: "", data: [] }
+      const result = { message: "add new product successfully!"}
+      return result
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+  },
+  fnRemoveProduct: async function (req, res) {
+    try {
+      const { product_id } = req.body
+      await database.fnDeleteProduct(product_id)
+      const result = { message: "Delete successfully" }
       return result
     } catch (err) {
       console.log(err)

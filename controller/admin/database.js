@@ -11,17 +11,35 @@ const database = {
                                 name,
                                 detail,
                                 createdate,
-                                image_url
+                                image_url,
+                                isactive
                             )
                             VALUES(
                                 ${prepare(name)},
                                 ${prepare(detail)},
                                 now(),
-                                ${prepare(imageurl)}
+                                ${prepare(imageurl)},
+                                1
                             )
                         `
-            const resultGetUser = await connectmysql.fnQuery(query)
-            return resultGetUser
+            const result = await connectmysql.fnQuery(query)
+            return result
+        } catch(err) {
+            throw new Error(err)
+        }
+    },
+    fnDeleteProduct: async function (product_id) {
+        try {
+            const query = ` 
+                            UPDATE
+                                products
+                            SET
+                                isactive = 0
+                            WHERE
+                                product_id = ${prepare(product_id)}
+                        `
+            const result = await connectmysql.fnQuery(query)
+            return result
         } catch(err) {
             throw new Error(err)
         }

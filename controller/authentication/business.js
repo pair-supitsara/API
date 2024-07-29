@@ -7,11 +7,13 @@ const business = {
   fnLogin: async function (req, res) {
     try {
       const { email, password } = req.body
-      const result = { message: "", data: [] }
+      const result = {}
       
       // check if data is null or undefined or empty-string, throw error
-      valid.mustNotEmpty(email)
-      valid.mustNotEmpty(password)
+      if (!email || !password) {
+        result.message = `Please fill out the form`
+        return result
+      }
       
       // find salt if salt is undefined becase of wrong email or you have to register before logging in
       const rsuser = await database.fnFindUserByEmail(email)
@@ -53,8 +55,13 @@ const business = {
   },
   fnRegister: async function (req, res) {
     try {
+      const result = {}
       const { email, password } = req.body
-      const result = { message: "", data: [] }
+
+      if (!email || !password) {
+        result.message = `Please fill out the form`
+        return result
+      }
 
       const isExistUser = await database.fnFindUserByEmail(email)
       if (isExistUser.length > 0) {

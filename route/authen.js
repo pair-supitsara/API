@@ -5,9 +5,9 @@ import auth from '../middleware/auth.js'
 
 router.post('/login', async (req, res) => {
     try {
-        const json = await business.fnLogin(req, res)
+        const result = await business.fnLogin(req, res)
 
-        res.status(200).json({ json })
+        res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
@@ -15,10 +15,10 @@ router.post('/login', async (req, res) => {
 
 router.post('/testverifytoken', auth, async (req, res) => { /* ทดสอบ use middleware */
     try {
-        const json = {
+        const result = {
             message: 'test token result'
         }
-        res.status(200).json(json)
+        res.status(200).json(result)
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
@@ -26,9 +26,9 @@ router.post('/testverifytoken', auth, async (req, res) => { /* ทดสอบ u
 
 router.post('/register', async (req, res) => {
     try {
-        const json = await business.fnRegister(req, res)
+        const result = await business.fnRegister(req, res)
 
-        res.status(200).json({ json })
+        res.status(200).json({ result })
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
