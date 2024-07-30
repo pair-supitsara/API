@@ -43,6 +43,25 @@ const database = {
         } catch(err) {
             throw new Error(err)
         }
+    },
+    fnUpdateProductById: async function (product_id, name, detail, filename) {
+        try {
+            const query = ` 
+                            UPDATE
+                                products
+                            SET
+                                name = ${prepare(name)},
+                                detail = ${prepare(detail)},
+                                ${filename ? `image_url = CONCAT('/uploads/',${prepare(filename)}),` : ''}
+                                updatedate = now()
+                            WHERE
+                                product_id = ${prepare(product_id)}
+                        `
+            const result = await connectmysql.fnQuery(query)
+            return result
+        } catch(err) {
+            throw new Error(err)
+        }
     }
 }
 

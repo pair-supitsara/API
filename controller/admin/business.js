@@ -34,6 +34,32 @@ const business = {
       console.log(err)
       throw err
     }
+  },
+  fnUpdateProduct: async function (req, res) {
+    try {
+      const result = {}
+      const { product_id, name, detail, image } = req.body
+      const { file, filename } = image
+      
+      if (file && filename) {
+        const buffer = Buffer.from(file, 'base64');
+        const filePath = path.join(process.cwd(), 'uploads', filename);
+        console.log(filePath)
+        fs.writeFileSync(filePath, buffer)
+      }
+      if (product_id) {
+        result.message = await database.fnUpdateProductById(product_id, name, detail, filename)
+        console.log(result.message)
+      } else {
+        result.message = 'product id is null'
+      }
+
+      result.message = "update successfully"
+      return result
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
   }
 }
 
