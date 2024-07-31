@@ -17,36 +17,35 @@ const business = {
       
       // find salt if salt is undefined becase of wrong email or you have to register before logging in
       const rsuser = await database.fnFindUserByEmail(email)
-      let salt
+      console.log(rsuser)
+      let salt, permission
       if (rsuser.length > 0 ) {
         salt = rsuser[0].salt
+        permission =  rsuser[0].permission
+        
+        // check email and password are correct
+        const resultUser = await database.fnCheckEmailAndHashPassword(email, password, salt)
+        let userid
+        if (resultUser.length > 0) {
+          userid = resultUser[0].user_id
+          // create token
+          const payload = { userid, permission }
+          const option = { expiresIn: '60000ms' }
+          var token = jwt.sign(payload, process.env.PRIVATE_KEY, option);
+          if (!token) {
+            result.message = 'fail while creating json web token'
+          } else {
+            result.message = 'Login successfully'
+            result.token = token
+            result.permission = permission
+            result.user_id = userid
+          }
+        } else {
+          result.message = 'wrong password'
+        }
       } else {
-        result.message = 'enter correct email or register before logging in'
-        return result
+        result.message = 'enter correct email!'
       }
-
-      // check email and password are correct
-      const resultUser = await database.fnCheckEmailAndHashPassword(email, password, salt)
-      let userid
-      if (resultUser.length > 0) {
-        userid = resultUser[0].user_id
-      } else {
-        result.message = 'wrong password'
-        return result
-      }
-
-      // create token
-      const payload = { userid }
-      const option = { expiresIn: '1000ms' }
-      var token = jwt.sign(payload, process.env.PRIVATE_KEY, option);
-      if (!token) {
-        result.message = 'fail while creating json web token'
-        return result
-      } else {
-        result.message = 'Login successfully'
-        result.token = token
-      }
-
       return result
     } catch (err) {
       console.log(err)

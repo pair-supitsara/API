@@ -23,4 +23,24 @@ router.post('/getproductbyid', async (req, res) => {
     }
 })
 
+router.post('/addtocart', auth, async (req, res) => {
+    try {
+        const result = await business.fnAddtoCart(req, res)
+
+        res.status(200).json({ result })
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+})
+
+router.post('/getmycart', auth, async (req, res) => {
+    try {
+        const result = await business.fnGetCartByUserId(req, res)
+
+        res.status(200).json({ result })
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+})
+
 export default router

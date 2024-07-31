@@ -6,9 +6,10 @@ const { prepare } = validator
 const database = {
     fnFindUserByEmail: async function (email) {
         try {
-            const query = ` select user_id, email, salt
-                            from users
-                            where email = ${prepare(email)}
+            const query = ` select a.email, a.salt, IF(ISNULL(b.admin_id), "customer", "admin") as permission
+                            from users as a
+                            left join admins as b on a.user_id = b.user_id
+                            where a.email = ${prepare(email)}
                         `
             const resultGetUser = await connectmysql.fnQuery(query)
             return resultGetUser
@@ -27,6 +28,7 @@ const database = {
                             and hashpassword = '${hashPassword}'
                         `
             const result = await connectmysql.fnQuery(query)
+            console.log(result)
             return result
         } catch(err) {
             throw new Error(err)

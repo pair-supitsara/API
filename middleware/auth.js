@@ -2,15 +2,17 @@ import jwt from 'jsonwebtoken'
 
 const auth = (req, res, next) => {
     try {
-        const { authorization } = req.headers
-        const token = authorization
+        const { token } = req.body
 
-        jwt.verify(token, process.env.PRIVATE_KEY, function(error, response) {
+        if (!token) { throw new Error('this endpoint need a token!') }
+        
+        jwt.verify(token, process.env.PRIVATE_KEY, function(error, decoded) {
             if (error) { throw new Error(error) }
+            req.body.permission = decoded.permission
             next()
         })
     } catch (error) {
-        throw new Error(error)
+        res.status(500).json({ message: error.message })
     }
 }
 

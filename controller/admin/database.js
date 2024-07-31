@@ -62,6 +62,22 @@ const database = {
         } catch(err) {
             throw new Error(err)
         }
+    },
+    fnGetUsers: async function () {
+        try {
+            const query = ` 
+                            SELECT  a.user_id, 
+                                    email, 
+                                    DATE_FORMAT(a.createdate, "%d/%m/%Y") as createdate,
+                                    IF(isnull(b.admin_id), "customer", "admin") as permission
+                            FROM users as a
+                            LEFT JOIN admins as b ON a.user_id = b.user_id
+                        `
+            const result = await connectmysql.fnQuery(query)
+            return result
+        } catch(err) {
+            throw new Error(err)
+        }
     }
 }
 

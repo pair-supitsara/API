@@ -60,6 +60,18 @@ const business = {
       console.log(err)
       throw err
     }
+  },
+  fnGetUsers: async function (req, res) {
+    try {
+      const result = { }
+      
+      result.data = await database.fnGetUsers()
+
+      return result
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
   }
 }
 
